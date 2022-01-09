@@ -59,7 +59,7 @@ const app = Vue.createApp({
       // 操控是否顯示商品詳情的對話框
       isShowDetailDialog: false,
       // 當前選中的商品資料
-      selectedGood: []
+      selectedGood: {}
     }
   },
   computed: {
