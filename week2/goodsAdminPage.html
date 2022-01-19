@@ -30,9 +30,10 @@
   <div id="app">
     <div class="container">
       <div class="row">
-        <table class="table mt-4">
+        <table class="table table-hover table-striped mt-4">
           <thead>
             <tr>
+              <th width="50">#</th>
               <th width="240">產品名稱</th>
               <th width="120">原價</th>
               <th width="120">售價</th>
@@ -41,7 +42,8 @@
             </tr>
           </thead>
           <tbody id="productList">
-            <tr v-for="item in products" :key="item.id">
+            <tr v-for="(item,i) in products" :key="item.id">
+              <th scope="row">{{ i + 1 }}</th>
               <td width="240">{{ item.title }}</td>
               <td width="120">{{ item.origin_price }}</td>
               <td width="120">{{ item.price }}</td>
@@ -82,8 +84,8 @@
                       <p class="card-text">商品內容：{{ selectedProduct.content }}</p>
                       <div class="d-flex">
                         <p class="card-text me-2">{{ selectedProduct.price }}</p>
-                        <p class="card-text text-secondary"><del>{{ selectedProduct.unit }}</del></p>
-                        {{ selectedProduct.origin_price }} / 元
+                        <p class="card-text text-secondary"><del>{{ selectedProduct.origin_price }}</del></p>
+                        {{ selectedProduct.unit }} / 元
                       </div>
                     </div>
                   </div>
