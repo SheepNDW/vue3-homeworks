@@ -23,17 +23,17 @@ const app = createApp({
         Swal.fire({
           icon: 'success',
           title: '歡迎回來',
-          confirmButtonText: '確定'
-        }).then((result) => {
-          if (result.isConfirmed) window.location = 'goodsAdminPage.html'
-        })
+          showConfirmButton: false,
+          timer: 1000
+        }).then(() => window.location = 'goodsAdminPage.html')
       }
       catch (error) {
+        form.password = ''
         // 登入失敗
         Swal.fire({
           icon: 'error',
-          title: 'Oops...',
-          text: error.response.data.message + '!'
+          title: error.response.data.message + '!',
+          text: '帳號或密碼錯誤'
         })
       }
     }

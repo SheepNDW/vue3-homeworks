@@ -92,6 +92,17 @@ const app = createApp({
       })
     }
 
-    return { products, selectedProduct, checkDetail, removeProduct, closeProductModel }
+    // 登出事件
+    const logout = async () => {
+      const { data } = await axios.post(`${url}/logout`)
+      Swal.fire({
+        title: data.message,
+        icon: 'info',
+        showConfirmButton: false,
+        timer: 1000
+      }).then(() => window.location = 'login.html')
+    }
+
+    return { products, selectedProduct, checkDetail, removeProduct, closeProductModel, logout }
   }
 }).mount('#app')
