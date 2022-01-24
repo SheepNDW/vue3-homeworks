@@ -7,7 +7,7 @@ const app = createApp({
     const path = 'sheep-api'
 
     // modal元件
-    let myModal = ''
+    let myModal = null
 
     // 產品列表
     const products = ref([])
@@ -49,6 +49,7 @@ const app = createApp({
       myModal = new bootstrap.Modal(document.querySelector('#productModal'))
     })
 
+
     // 當前選中/將要新增的產品
     let selectedProduct = ref({})
     const isEdit = ref(false)
@@ -57,16 +58,23 @@ const app = createApp({
         isEdit.value = true
         selectedProduct.value = product
       } else {
-        selectedProduct.value = product
         isEdit.value = false
+        selectedProduct.value = product
       }
       myModal.show()
+    }
+    // 新增圖片 
+    const addImg = () => {
+      selectedProduct.value.imagesUrl = []
+      selectedProduct.value.imagesUrl.push('')
     }
 
     // 關閉產品詳情
     const closeProductModel = () => {
       // 清空暫存
       selectedProduct.value = {}
+      // 重新渲染列表
+      getProductData()
       myModal.hide()
     }
 
@@ -112,6 +120,7 @@ const app = createApp({
       }).then(() => window.location = 'login.html')
     }
 
+
     return {
       products,
       selectedProduct,
@@ -119,7 +128,8 @@ const app = createApp({
       removeProduct,
       closeProductModel,
       logout,
-      isEdit
+      isEdit,
+      addImg
     }
   }
 }).mount('#app')
