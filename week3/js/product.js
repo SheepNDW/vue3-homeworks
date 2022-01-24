@@ -49,19 +49,28 @@ const app = createApp({
       myModal = new bootstrap.Modal(document.querySelector('#productModal'))
     })
 
-    // 當前選中的產品
+    // 當前選中/將要新增的產品
     let selectedProduct = ref({})
-    const checkDetail = (id) => {
-      selectedProduct.value = products.value.find(item => item.id === id)
+    const isEdit = ref(false)
+    const openModel = (status, product = {}) => {
+      if (status === 'edit') {
+        isEdit.value = true
+        selectedProduct.value = product
+      } else {
+        selectedProduct.value = product
+        isEdit.value = false
+      }
       myModal.show()
     }
 
     // 關閉產品詳情
     const closeProductModel = () => {
+      // 清空暫存
+      selectedProduct.value = {}
       myModal.hide()
     }
 
-    // 刪除產品的方法
+    // --- 刪除產品的方法 ---
     const removeProduct = (id) => {
       Swal.fire({
         title: '確定要刪除該產品嗎?',
@@ -92,7 +101,7 @@ const app = createApp({
       })
     }
 
-    // 登出事件
+    // --- 登出事件 ---
     const logout = async () => {
       const { data } = await axios.post(`${url}/logout`)
       Swal.fire({
@@ -103,6 +112,14 @@ const app = createApp({
       }).then(() => window.location = 'login.html')
     }
 
-    return { products, selectedProduct, checkDetail, removeProduct, closeProductModel, logout }
+    return {
+      products,
+      selectedProduct,
+      openModel,
+      removeProduct,
+      closeProductModel,
+      logout,
+      isEdit
+    }
   }
 }).mount('#app')
