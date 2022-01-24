@@ -69,13 +69,42 @@ const app = createApp({
       selectedProduct.value.imagesUrl.push('')
     }
 
-    // 關閉產品詳情
-    const closeProductModel = () => {
+    // 關閉產品Modal
+    const closeProductModal = () => {
       // 清空暫存
       selectedProduct.value = {}
       // 重新渲染列表
       getProductData()
       myModal.hide()
+    }
+
+    // --- 修改 / 新增 產品的方法 ---
+    const updateProduct = () => {
+      // 新增api
+      let api = `${url}/api/${path}/admin/product`
+      let http = 'post'
+      // 修改api
+      if (isEdit.value) {
+        api = `${url}/api/${path}/admin/product/${selectedProduct.value.id}`
+        http = 'put'
+      }
+      // 發出請求
+      axios[http](api, { data: selectedProduct.value }).then((res) => {
+        Swal.fire({
+          title: res.data.message,
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1000
+        })
+        // 關閉modal
+        closeProductModal()
+      }).catch(err => {
+        Swal.fire({
+          title: err.data.message,
+          icon: 'error',
+          confirmButtonText: '確定',
+        })
+      })
     }
 
     // --- 刪除產品的方法 ---
@@ -126,10 +155,11 @@ const app = createApp({
       selectedProduct,
       openModel,
       removeProduct,
-      closeProductModel,
+      closeProductModal,
       logout,
       isEdit,
-      addImg
+      addImg,
+      updateProduct
     }
   }
 }).mount('#app')

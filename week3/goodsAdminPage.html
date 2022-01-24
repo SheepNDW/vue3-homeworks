@@ -87,7 +87,8 @@
                 <span v-if="isEdit">編輯產品</span>
                 <span v-else>新增產品</span>
               </h5>
-              <button type="button" class="btn-close" @click="closeProductModel" aria-label="Close"></button>
+              <button type="button" class="btn-close btn-close-white" @click="closeProductModal"
+                aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <div class="row">
@@ -188,10 +189,10 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-outline-secondary" @click="closeProductModel">
+              <button type="button" class="btn btn-outline-secondary" @click="closeProductModal">
                 取消
               </button>
-              <button type="button" class="btn btn-primary">
+              <button type="button" class="btn btn-primary" @click="updateProduct">
                 確認
               </button>
             </div>
