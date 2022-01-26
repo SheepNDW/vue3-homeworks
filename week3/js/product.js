@@ -10,7 +10,7 @@ const app = createApp({
     let myModal = null
 
     // 產品列表
-    const products = ref([])
+    const products = ref(null)
 
     // 取得產品資料方法
     const getProductData = async () => {
@@ -60,6 +60,8 @@ const app = createApp({
       } else {
         isEdit.value = false
         selectedProduct.value = product
+        // 預設為啟動狀態
+        selectedProduct.value.is_enabled = 1
       }
       myModal.show()
     }
@@ -149,6 +151,14 @@ const app = createApp({
       }).then(() => window.location = 'login.html')
     }
 
+    // 點擊 switchBox 事件
+    const changeEnabled = (item) => {
+      isEdit.value = true
+      selectedProduct.value = item
+      updateProduct()
+      // const { data } = await axios.put(`${url}/api/${path}/admin/product/${item.id}`, { data: item })
+      // getProductData()
+    }
 
     return {
       products,
@@ -159,7 +169,8 @@ const app = createApp({
       logout,
       isEdit,
       addImg,
-      updateProduct
+      updateProduct,
+      changeEnabled
     }
   }
 }).mount('#app')
