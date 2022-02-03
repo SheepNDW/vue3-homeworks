@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>login</title>
+  <link rel="stylesheet" href="./style/login/login.css">
+</head>
+
+<body>
+  <div class="container" id="app">
+    <div class="wrapper">
+
+      <div class="input-box">
+        <div class="login">
+          <h1>歡迎回來</h1>
+          <form class="login-form" autocomplete="off">
+            <input type="email" placeholder="Email" v-model="form.username">
+            <input type="password" placeholder="Password" v-model="form.password">
+            <button class="buttom-sumbit" type="button" @click="login">LOGIN</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="rightbox">
+        <h2 class="title"><span>STORY</span>&<br>DREAM</h2>
+        <p class="desc">Pick your perfect <span>book</span></p>
+        <img class="bookImg" src="./images/books2.png" />
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- axios cdn -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"
+    integrity="sha512-u9akINsQsAkG9xjc1cnGF4zw5TFDwkxuc9vUp5dltDWYCSmyd0meygbvgXrlc/z7/o4a19Fb5V0OUE58J7dcyw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- sweetalert2 cdn -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.3.5/dist/sweetalert2.all.min.js"></script>
+
+  <script src="./js/login.js" type="module"></script>
+</body>
+
+</html>

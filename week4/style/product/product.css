@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700&display=swap');
+
+* {
+  font-family: 'Noto Sans TC', sans-serif;
+}
+
+img {
+  object-fit: contain;
+  max-width: 100%;
+}
+
+.btn:focus {
+  box-shadow: none !important;
+}
+
+#productList .info {
+  display: flex;
+  text-align-last: left;
+  align-items: center;
+}
+
+#productList .info img {
+  height: 70px;
+  width: 70px;
+  margin-right: 20px;
+}
+
+#productList button {
+  width: 33px;
+}
