@@ -13,6 +13,10 @@ img {
   box-shadow: none !important;
 }
 
+a:focus {
+  box-shadow: none !important;
+}
+
 #productList .info {
   display: flex;
   text-align-last: left;
