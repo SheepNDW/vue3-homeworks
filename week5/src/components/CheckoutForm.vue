@@ -89,7 +89,7 @@ import { createOrder } from '@/api/order'
 export default {
   name: 'CheckoutForm',
   components: { Form, Field, ErrorMessage },
-  setup() {
+  setup(props, { emit }) {
     // 表單資料物件
     const form = reactive({
       user: {
@@ -111,12 +111,17 @@ export default {
     // 送出並生成訂單方法
     const formRef = ref(null)
     const submitOrder = async () => {
-      try {
-        const data = await createOrder(form)
-        alert(data.message)
-        formRef.value.resetForm()
-      } catch (err) {
-        alert(err.message)
+      const valid = await formRef.value.validate()
+      if (valid) {
+        try {
+          const data = await createOrder(form)
+          alert(data.message)
+          formRef.value.resetForm()
+          form.message = ''
+          emit('reset-cart')
+        } catch (err) {
+          alert('你的購物車裡沒有東西唷~!')
+        }
       }
     }
 

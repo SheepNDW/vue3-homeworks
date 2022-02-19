@@ -152,7 +152,7 @@
       </table>
     </div>
     <div class="my-5 row justify-content-center">
-      <CheckoutForm />
+      <CheckoutForm @reset-cart="reloadCart" />
     </div>
   </div>
 </template>
@@ -243,6 +243,14 @@ export default {
         isLoadingItem.value = ''
       })
     }
+
+    // 送出訂單後刷新購物車內容
+    const reloadCart = () => {
+      getCartList().then((res) => {
+        cartData.value = res.data
+      })
+    }
+
     return {
       products,
       pagination,
@@ -255,7 +263,8 @@ export default {
       removeCartItem,
       updateCartItem,
       changePage,
-      clearAllCarts
+      clearAllCarts,
+      reloadCart
     }
   }
 }
