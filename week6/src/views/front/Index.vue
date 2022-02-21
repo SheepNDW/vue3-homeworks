@@ -1,5 +1,7 @@
 <template>
-  <div class="container">這是首頁</div>
+  <div class="container">
+    <h2 class="h2 d-flex justify-content-center">這是首頁</h2>
+  </div>
 </template>
 
 <script>

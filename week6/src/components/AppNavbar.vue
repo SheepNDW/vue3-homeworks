@@ -1,5 +1,7 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+  <nav
+    class="navbar navbar-expand-lg navbar-light bg-light shadow-sm sticky-top"
+  >
     <div class="container-fluid">
       <RouterLink class="navbar-brand" to="/">前台頁面</RouterLink>
       <button
