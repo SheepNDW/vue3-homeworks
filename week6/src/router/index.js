@@ -3,6 +3,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 const Layout = () => import('@/views/Layout')
 const Home = () => import('@/views/front/Index')
 const Products = () => import('@/views/front/product/Index')
+const ProductDetail = () => import('@/views/front/product/components/ProductDetail')
 const Cart = () => import('@/views/front/cart/Index')
 
 const Login = () => import('@/views/front/login/Index')
@@ -18,6 +19,7 @@ const routes = [
     children: [
       { path: '/', component: Home },
       { path: '/products', component: Products },
+      { path: '/product/:id', component: ProductDetail },
       { path: '/cart', component: Cart }
     ]
   },
@@ -41,7 +43,10 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
-  linkActiveClass: 'active'
+  linkActiveClass: 'active',
+  scrollBehavior() {
+    return { left: 0, top: 0 }
+  }
 })
 
 export default router
