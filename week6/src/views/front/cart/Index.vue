@@ -3,7 +3,14 @@
     <Loading :active="isLoading" />
     <!-- 購物車列表 -->
     <div class="text-end">
-      <button class="btn btn-outline-danger" type="button">清空購物車</button>
+      <button
+        @click="clearAllCarts"
+        class="btn btn-outline-danger"
+        type="button"
+        :disabled="cartData?.carts?.length === 0"
+      >
+        清空購物車
+      </button>
     </div>
     <table class="table align-middle">
       <thead>
@@ -15,10 +22,19 @@
         </tr>
       </thead>
       <tbody>
-        <template v-if="$store.state.cart.cartData.carts">
-          <tr v-for="item in $store.state.cart.cartData.carts" :key="item.id">
+        <tr v-if="cartData.carts.length === 0">
+          <td colspan="6">
+            <CartNone />
+          </td>
+        </tr>
+        <template v-if="cartData.carts.length > 0">
+          <tr v-for="item in cartData.carts" :key="item.id">
             <td>
-              <button type="button" class="btn btn-outline-danger btn-sm">
+              <button
+                @click="removeCartItem(item.id)"
+                type="button"
+                class="btn btn-outline-danger btn-sm"
+              >
                 x
               </button>
             </td>
@@ -28,7 +44,12 @@
             <td>
               <div class="input-group input-group-sm">
                 <div class="input-group mb-3">
-                  <select id="" class="form-select">
+                  <select
+                    v-model="item.qty"
+                    class="form-select"
+                    @change="updateCartItem(item)"
+                    :disabled="isLoadingItem === item.id"
+                  >
                     <option
                       :value="num"
                       v-for="num in 20"
@@ -50,19 +71,18 @@
           </tr>
         </template>
       </tbody>
-      <tfoot v-if="$store.state.cart.cartData.carts">
+      <tfoot v-if="cartData.carts.length > 0">
         <tr>
           <td colspan="3" class="text-end">總計</td>
-          <td class="text-end">{{ $store.state.cart.cartData.total }}</td>
+          <td class="text-end">{{ cartData.total }}</td>
         </tr>
         <tr>
           <td colspan="3" class="text-end text-success">折扣價</td>
           <td class="text-end text-success">
-            {{ $store.state.cart.cartData.final_total }}
+            {{ cartData.final_total }}
           </td>
         </tr>
       </tfoot>
-      <CartNone v-else />
     </table>
     <div class="my-5 row justify-content-center">
       <CheckoutForm />
@@ -74,19 +94,49 @@
 import CheckoutForm from './components/CheckoutForm.vue'
 import CartNone from './components/CartNone.vue'
 import { useStore } from 'vuex'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 export default {
   name: 'Cart',
   components: { CheckoutForm, CartNone },
   setup() {
     const isLoading = ref(true)
-    // 獲取購物車清單
+    const isLoadingItem = ref('')
     const store = useStore()
+
+    // 獲取購物車清單
     store.dispatch('cart/findCart').then(() => {
       isLoading.value = false
     })
+    const cartData = computed(() => store.state.cart.cartData)
 
-    return { isLoading }
+    // 刪除購物車內容
+    const removeCartItem = (id) => {
+      store.dispatch('cart/removeCart', id)
+    }
+
+    // 清空購物車 (全部刪除)
+    const clearAllCarts = () => {
+      store.dispatch('cart/clearAllCarts')
+    }
+
+    // 更新購物車
+    const updateCartItem = (item) => {
+      isLoadingItem.value = item.id
+      store
+        .dispatch('cart/updateCart', { prodcutId: item.id, count: item.qty })
+        .then(() => {
+          isLoadingItem.value = ''
+        })
+    }
+
+    return {
+      isLoading,
+      isLoadingItem,
+      cartData,
+      removeCartItem,
+      clearAllCarts,
+      updateCartItem
+    }
   }
 }
 </script>
