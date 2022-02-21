@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-3">
-    <Loading :active="isLoading" v-if="!product" />
+    <Loading :active="isLoading" />
     <div class="row" v-if="product">
       <div class="col-sm-6">
         <img class="img-fluid" :src="product.imageUrl" style="height: 400px" />
@@ -27,7 +27,13 @@
               min="1"
               v-model.number="qty"
             />
-            <button type="button" class="btn btn-primary">加入購物車</button>
+            <button
+              @click="addToCart($route.params.id)"
+              type="button"
+              class="btn btn-primary"
+            >
+              加入購物車
+            </button>
           </div>
         </div>
       </div>
@@ -40,6 +46,7 @@
 import { ref } from 'vue'
 import { getProductById } from '@/api/product'
 import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 export default {
   name: 'ProductDetail',
   setup() {
@@ -52,9 +59,18 @@ export default {
       isLoading.value = false
     })
 
+    // 加入購物車
     const qty = ref(1)
+    const store = useStore()
+    const addToCart = (id) => {
+      isLoading.value = true
+      store.dispatch('cart/addToCart', { id, count: qty.value }).then(() => {
+        qty.value = 1
+        isLoading.value = false
+      })
+    }
 
-    return { product, isLoading, qty }
+    return { product, isLoading, qty, addToCart }
   }
 }
 </script>

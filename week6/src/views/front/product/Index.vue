@@ -1,10 +1,7 @@
 <template>
   <div class="container">
     <div class="row mt-4">
-      <div class="col-md-3">分類區</div>
-      <div class="col-md-9">
-        <ProductsList />
-      </div>
+      <ProductsList />
     </div>
   </div>
 </template>

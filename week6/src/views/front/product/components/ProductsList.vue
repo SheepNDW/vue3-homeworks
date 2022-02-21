@@ -9,9 +9,10 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
+      <tr v-for="product in products" :key="product.id">
         <td style="width: 200px">
           <div
+            :style="{ backgroundImage: `url(${product.imageUrl})` }"
             style="
               width: 100px;
               height: 150px;
@@ -20,21 +21,35 @@
             "
           ></div>
         </td>
-        <td>{{}}</td>
+        <td>{{ product.title }}</td>
         <td>
-          <div class="h5">{{}} 元</div>
-          <div>
-            <del class="h6">原價 {{}} 元</del>
-            <div class="h5">現在只要 {{}} 元</div>
+          <div v-if="product.price === product.origin_price" class="h5">
+            {{ product.price }} 元
+          </div>
+          <div v-else>
+            <del class="h6">原價 {{ product.origin_price }} 元</del>
+            <div class="h5">現在只要 {{ product.price }} 元</div>
           </div>
         </td>
         <td>
           <div class="btn-group btn-group-sm">
-            <button type="button" class="btn btn-outline-secondary">
+            <button
+              @click="checkDetail(product.id)"
+              type="button"
+              class="btn btn-outline-secondary"
+            >
               查看更多
             </button>
-            <button type="button" class="btn btn-danger">
-              <span class="spinner-grow spinner-grow-sm"></span>
+            <button
+              @click="addToCart(product.id)"
+              type="button"
+              class="btn btn-danger"
+              :disabled="isLoadingItem === product.id"
+            >
+              <span
+                v-show="isLoadingItem === product.id"
+                class="spinner-grow spinner-grow-sm"
+              ></span>
               加到購物車
             </button>
           </div>
@@ -45,7 +60,42 @@
 </template>
 
 <script>
+import { ref } from 'vue'
+import { getProducts } from '@/api/product'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 export default {
-  name: 'ProductsList'
+  name: 'ProductsList',
+  setup() {
+    // 頁面初始化時獲取產品列表
+    const products = ref(null)
+    getProducts().then((data) => {
+      console.log(data)
+      products.value = data.products
+    })
+
+    // 查看產品細節
+    const router = useRouter()
+    const checkDetail = (id) => {
+      router.push(`/product/${id}`)
+    }
+
+    // 加入購物車
+    const isLoadingItem = ref('')
+    const store = useStore()
+    const addToCart = (id) => {
+      isLoadingItem.value = id
+      store.dispatch('cart/addToCart', { id, count: 1 }).then(() => {
+        isLoadingItem.value = ''
+      })
+    }
+
+    return {
+      products,
+      checkDetail,
+      isLoadingItem,
+      addToCart
+    }
+  }
 }
 </script>
