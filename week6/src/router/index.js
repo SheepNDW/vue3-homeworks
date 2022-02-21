@@ -1,25 +1,47 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from '../views/Home.vue'
+
+const Layout = () => import('@/views/Layout')
+const Home = () => import('@/views/front/Index')
+const Products = () => import('@/views/front/product/Index')
+const Cart = () => import('@/views/front/cart/Index')
+
+const Login = () => import('@/views/front/login/Index')
+
+const Dashboard = () => import('@/views/dashboard/Index')
+const AdminProducts = () => import('@/views/dashboard/products/AdminProducts')
+const AdminOrders = () => import('@/views/dashboard/orders/AdminOrders')
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    component: Layout,
+    children: [
+      { path: '/', component: Home },
+      { path: '/products', component: Products },
+      { path: '/cart', component: Cart }
+    ]
   },
+  // 登入
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/login',
+    component: Login
+  },
+  // 後台
+  {
+    path: '/admin',
+    component: Dashboard,
+    redirect: '/admin/products',
+    children: [
+      { path: 'products', component: AdminProducts },
+      { path: 'orders', component: AdminOrders }
+    ]
   }
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes,
+  linkActiveClass: 'active'
 })
 
 export default router
