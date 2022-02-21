@@ -13,6 +13,10 @@ import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json'
 import router from './router'
 import store from './store'
 
+// 匯入VueLoading元件
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
+
 // 定義驗證規則
 defineRule('required', required)
 defineRule('email', email)
@@ -22,4 +26,8 @@ configure({
 })
 setLocale('zh_TW')
 
-createApp(App).use(store).use(router).mount('#app')
+createApp(App)
+  .use(store)
+  .use(router)
+  .component('Loading', Loading)
+  .mount('#app')
