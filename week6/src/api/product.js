@@ -18,3 +18,14 @@ export const getProducts = (page = 1) => {
 export const getProductById = (id) => {
   return request(`/api/${path}/product/${id}`, 'get')
 }
+
+// 後台 API
+
+/**
+ * 取得後台產品列表
+ * @param {Number} page - 當前頁碼
+ * @returns Promise
+ */
+export const getAdminProducts = (page = 1, category = '') => {
+  return request(`/api/${path}/admin/products?page=${page}`, 'get', { category })
+}
