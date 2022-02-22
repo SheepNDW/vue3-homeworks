@@ -3,7 +3,8 @@
   <ProductModal
     ref="productModalCom"
     :tempProduct="tempProduct"
-    :isEdit="isEdit"
+    :is-edit="isEdit"
+    @update-list="getProducts"
   />
   <div class="text-end mt-4">
     <button class="btn btn-primary addproduct-btn" @click="openModal('new')">
@@ -47,6 +48,7 @@
                 :true-value="1"
                 :false-value="0"
                 v-model.number="product.is_enabled"
+                @change="updateProduct(product)"
               />
             </div>
             <span v-if="product.is_enabled" class="text-success">啟用</span>
@@ -63,6 +65,7 @@
             <button
               type="button"
               class="btn btn-sm btn-outline-danger move deleteBtn"
+              @click="removeProduct(product.id)"
             >
               <i class="fas fa-trash-alt"></i>
             </button>
@@ -74,8 +77,8 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import { getAdminProducts } from '@/api/product'
+import { onMounted, ref } from 'vue'
+import { deleteProduct, editProduct, getAdminProducts } from '@/api/product'
 import ProductModal from './components/ProductModal.vue'
 export default {
   name: 'AdminProducts',
@@ -84,10 +87,13 @@ export default {
     // 取得後台產品列表
     const isLoading = ref(true)
     const products = ref(null)
-    getAdminProducts().then((data) => {
+    const getProducts = async () => {
+      isLoading.value = true
+      const data = await getAdminProducts()
       products.value = data.products
       isLoading.value = false
-    })
+    }
+    onMounted(() => getProducts())
 
     // 想要顯示在modal的產品
     const tempProduct = ref({
@@ -104,13 +110,29 @@ export default {
       productModalCom.value.openModal()
     }
 
+    // 刪除產品方法
+    const removeProduct = async (id) => {
+      const data = await deleteProduct(id)
+      alert(data.message)
+      getProducts()
+    }
+
+    // switchbox切換事件
+    const updateProduct = async (product) => {
+      const data = await editProduct(product.id, product)
+      alert(data.message)
+    }
+
     return {
       isLoading,
       products,
       productModalCom,
       openModal,
       tempProduct,
-      isEdit
+      isEdit,
+      getProducts,
+      removeProduct,
+      updateProduct
     }
   }
 }

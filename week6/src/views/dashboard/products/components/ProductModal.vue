@@ -210,6 +210,7 @@
 <script>
 import { onMounted, ref, watch } from 'vue'
 import Modal from 'bootstrap/js/dist/modal'
+import { editProduct, uploadProduct } from '@/api/product'
 export default {
   props: {
     tempProduct: {
@@ -254,7 +255,21 @@ export default {
     }
 
     // --- 修改 / 新增 產品的方法 ---
-    const updateProduct = () => {}
+    const updateProduct = async () => {
+      // 修改
+      if (props.isEdit) {
+        const data = await editProduct(product.value.id, product.value)
+        alert(data.message)
+      }
+      // 新增
+      if (!props.isEdit) {
+        const data = await uploadProduct(product.value)
+        alert(data.message)
+      }
+      closeModal()
+      // 通知父元件更新產品列表
+      emit('update-list')
+    }
 
     return {
       productModal,
