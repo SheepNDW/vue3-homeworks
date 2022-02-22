@@ -1,5 +1,12 @@
 <template>
-  <Form ref="formRef" class="col-md-6" autocomplete="off" v-slot="{ errors }">
+  <Form
+    ref="formRef"
+    class="col-md-6"
+    autocomplete="off"
+    :validation-schema="schema"
+    v-slot="{ errors }"
+    @submit="submitOrder"
+  >
     <div class="mb-3">
       <label for="email" class="form-label">Email</label>
       <Field
@@ -75,8 +82,11 @@
 </template>
 
 <script>
+import { reactive, ref } from 'vue'
+import { useStore } from 'vuex'
+import { createOrder } from '@/api/order'
+import schema from '@/utils/vee-validate-schema'
 import { Form, Field, ErrorMessage } from 'vee-validate'
-import { reactive } from 'vue'
 export default {
   name: 'CheckoutForm',
   components: { Form, Field, ErrorMessage },
@@ -92,7 +102,34 @@ export default {
       message: ''
     })
 
-    return { form }
+    const mySchema = {
+      姓名: 'required',
+      email: 'required|email',
+      mobile: schema.mobile,
+      地址: 'required'
+    }
+
+    // 送出並生成訂單方法
+    const formRef = ref(null)
+    const store = useStore()
+    const submitOrder = async () => {
+      // 提交訂單前先進行全體驗證
+      const valid = await formRef.value.validate()
+      if (valid) {
+        try {
+          const data = await createOrder(form)
+          alert(data.message)
+          formRef.value.resetForm()
+          form.message = ''
+          // 刷新購物車
+          store.dispatch('cart/findCart')
+        } catch (err) {
+          alert('購物車裡面沒有東西唷~')
+        }
+      }
+    }
+
+    return { form, schema: mySchema, formRef, submitOrder }
   }
 }
 </script>
