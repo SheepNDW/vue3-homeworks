@@ -49,4 +49,13 @@ const router = createRouter({
   }
 })
 
+router.beforeEach((to, from, next) => {
+  // 需要登入的路由: 地址是以 /admin 開頭
+  const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1')
+  if (!token && to.path.startsWith('/admin')) {
+    return next('/login?redirectUrl=' + encodeURIComponent(to.fullPath))
+  }
+  next()
+})
+
 export default router
