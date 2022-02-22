@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '@/router'
 
 export const baseURL = 'https://vue3-course-api.hexschool.io/v2'
 const instance = axios.create({
@@ -6,8 +7,34 @@ const instance = axios.create({
   timeout: 5000
 })
 
+instance.interceptors.request.use(config => {
+  // 攔截業務邏輯
+  // 進行請求配置的修改
+  // 如果本地有token就在頭部攜帶
+
+  // 1.獲取token
+  const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1')
+  // 2.判斷是否有token
+  if (token) {
+    // 3.設置token
+    config.headers.Authorization = `Bearer ${token}`
+  }
+
+  return config
+}, err => {
+  return Promise.reject(err)
+})
+
 // res => res.data 取出data資料, 將來打api時直接拿到的就是後台資料
-instance.interceptors.response.use(res => res.data, err => Promise.reject(err))
+instance.interceptors.response.use(res => res.data, err => {
+  // 401 code 進入此函式
+  if (err.response && err.response.status === 401) {
+    const fullPath = encodeURIComponent(router.currentRoute.value.fullPath)
+    router.push('/login?redirectUrl=' + fullPath)
+  }
+
+  return Promise.reject(err)
+})
 
 // 請求工具函式
 export default (url, method, submitData) => {
