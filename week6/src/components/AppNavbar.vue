@@ -2,7 +2,7 @@
   <nav
     class="navbar navbar-expand-lg navbar-light bg-light shadow-sm sticky-top"
   >
-    <div class="container-fluid">
+    <div class="container">
       <RouterLink class="navbar-brand" to="/">前台頁面</RouterLink>
       <button
         class="navbar-toggler"
