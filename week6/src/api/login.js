@@ -9,3 +9,11 @@ import request from '@/utils/request'
 export const signin = (userInfo) => {
   return request('/admin/signin', 'post', userInfo)
 }
+
+/**
+ * 驗證登入狀態
+ * @returns Promise
+ */
+export const userCheck = () => {
+  return request('/api/user/check', 'post')
+}
