@@ -7,3 +7,4 @@
   [第三週 - 熟練 Vue.js](https://sheepndw.github.io/vue3-homeworks/week3/login.html) <br>
   [第四週 - 元件化](https://sheepndw.github.io/vue3-homeworks/week4/login.html) <br>
   [第五週 - 進階語法介紹](https://sheepndw.github.io/vue3-homeworks/week5/dist/index.html) <br>
+  [第六週 - Vue Cli、Vue Router](https://sheepndw.github.io/vue3-homeworks/week6/dist/index.html) <br>
