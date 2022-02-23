@@ -10,12 +10,15 @@ import { localize, setLocale } from '@vee-validate/i18n'
 // 匯入繁體中文語系檔案
 import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json'
 
-import router from './router'
-import store from './store'
-
 // 匯入VueLoading元件
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
+
+// 匯入自己寫的UI元件庫
+import UI from '@/components/library'
+
+import router from './router'
+import store from './store'
 
 // 定義驗證規則
 defineRule('required', required)
@@ -29,5 +32,6 @@ setLocale('zh_TW')
 createApp(App)
   .use(store)
   .use(router)
+  .use(UI)
   .component('Loading', Loading)
   .mount('#app')
