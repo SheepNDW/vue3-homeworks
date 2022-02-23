@@ -73,6 +73,11 @@
         </tr>
       </tbody>
     </table>
+    <UiPagination
+      v-if="pagination?.total_pages > 1"
+      :pages="pagination"
+      @change-page="changePager"
+    />
   </div>
 </template>
 
@@ -87,10 +92,12 @@ export default {
     // 取得後台產品列表
     const isLoading = ref(true)
     const products = ref(null)
-    const getProducts = async () => {
+    const pagination = ref(null)
+    const getProducts = async (page) => {
       isLoading.value = true
-      const data = await getAdminProducts()
+      const data = await getAdminProducts(page)
       products.value = data.products
+      pagination.value = data.pagination
       isLoading.value = false
     }
     onMounted(() => getProducts())
@@ -123,6 +130,11 @@ export default {
       alert(data.message)
     }
 
+    // 換頁函式
+    const changePager = async (page) => {
+      getProducts(page)
+    }
+
     return {
       isLoading,
       products,
@@ -132,7 +144,9 @@ export default {
       isEdit,
       getProducts,
       removeProduct,
-      updateProduct
+      updateProduct,
+      pagination,
+      changePager
     }
   }
 }

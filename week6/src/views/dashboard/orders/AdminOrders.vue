@@ -19,6 +19,11 @@
       </tr>
     </tbody>
   </table>
+  <UiPagination
+    v-if="pagination?.total_pages > 1"
+    :pages="pagination"
+    @change-page="changePager"
+  />
 </template>
 
 <script>
@@ -30,11 +35,19 @@ export default {
   setup() {
     // 取得後台訂單列表
     const orders = ref(null)
+    const pagination = ref(null)
     getOrdersList().then((data) => {
       orders.value = data.orders
+      pagination.value = data.pagination
     })
 
-    return { orders, dayjs }
+    const changePager = async (page) => {
+      const data = await getOrdersList(page)
+      orders.value = data.orders
+      pagination.value = data.pagination
+    }
+
+    return { orders, dayjs, pagination, changePager }
   }
 }
 </script>

@@ -57,6 +57,11 @@
       </tr>
     </tbody>
   </table>
+  <UiPagination
+    v-if="pagination?.total_pages > 1"
+    :pages="pagination"
+    @change-page="changePager"
+  />
 </template>
 
 <script>
@@ -69,9 +74,10 @@ export default {
   setup() {
     // 頁面初始化時獲取產品列表
     const products = ref(null)
+    const pagination = ref(null)
     getProducts().then((data) => {
-      console.log(data)
       products.value = data.products
+      pagination.value = data.pagination
     })
 
     // 查看產品細節
@@ -90,11 +96,21 @@ export default {
       })
     }
 
+    // 換頁函式
+    const changePager = (page) => {
+      getProducts(page).then((data) => {
+        products.value = data.products
+        pagination.value = data.pagination
+      })
+    }
+
     return {
       products,
       checkDetail,
       isLoadingItem,
-      addToCart
+      addToCart,
+      pagination,
+      changePager
     }
   }
 }
