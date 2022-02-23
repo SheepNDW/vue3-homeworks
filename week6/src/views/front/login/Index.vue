@@ -4,17 +4,39 @@
       <div class="input-box">
         <div class="login">
           <h1>歡迎回來</h1>
-          <form class="login-form" autocomplete="off">
-            <input type="email" placeholder="Email" v-model="form.username" />
-            <input
+          <Form
+            ref="formRef"
+            @submit="login"
+            class="login-form"
+            autocomplete="off"
+            v-slot="{ errors }"
+          >
+            <Field
+              name="email"
+              type="email"
+              placeholder="Email"
+              v-model="form.username"
+              rules="email|required"
+              :class="{ 'is-invalid': errors['email'] }"
+            />
+            <ErrorMessage
+              name="email"
+              class="invalid-feedback text-center"
+            ></ErrorMessage>
+            <Field
+              name="密碼"
               type="password"
               placeholder="Password"
               v-model="form.password"
+              rules="required"
+              :class="{ 'is-invalid': errors['密碼'] }"
             />
-            <button class="buttom-sumbit" type="button" @click="login">
-              LOGIN
-            </button>
-          </form>
+            <ErrorMessage
+              name="密碼"
+              class="invalid-feedback text-center"
+            ></ErrorMessage>
+            <button class="buttom-sumbit" type="submit">LOGIN</button>
+          </Form>
         </div>
       </div>
 
@@ -28,12 +50,15 @@
 </template>
 
 <script>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { signin } from '@/api/login'
 import { useRouter, useRoute } from 'vue-router'
+import { Form, Field, ErrorMessage } from 'vee-validate'
 export default {
   name: 'Login',
+  components: { Form, Field, ErrorMessage },
   setup() {
+    const formRef = ref(null)
     // 登入表單
     const form = reactive({
       username: '',
@@ -43,18 +68,21 @@ export default {
     const router = useRouter()
     const route = useRoute()
     const login = async () => {
-      try {
-        const { token, expired } = await signin(form)
-        document.cookie = `hexToken=${token}; expires=${new Date(expired)};`
-        alert('登入成功! ')
-        router.push(route.query.redirectUrl || '/admin')
-      } catch (err) {
-        form.password = ''
-        alert(err.response.data.message + '!')
+      const valid = await formRef.value.validate()
+      if (valid) {
+        try {
+          const { token, expired } = await signin(form)
+          document.cookie = `hexToken=${token}; expires=${new Date(expired)};`
+          alert('登入成功! ')
+          router.push(route.query.redirectUrl || '/admin')
+        } catch (err) {
+          form.password = ''
+          alert(err.response.data.message + '!')
+        }
       }
     }
 
-    return { form, login }
+    return { formRef, form, login }
   }
 }
 </script>
