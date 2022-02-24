@@ -4,31 +4,24 @@
   >
     <div class="container">
       <RouterLink class="navbar-brand" to="/">前台頁面</RouterLink>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
+      <button class="navbar-toggler" type="button" @click="handlerToggle">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div
+        :class="{ show: isOpen }"
         class="collapse navbar-collapse justify-content-center"
         id="navbarNav"
       >
         <ul class="navbar-nav">
-          <li class="nav-item">
+          <li class="nav-item" @click="isOpen = !isOpen">
             <RouterLink class="nav-link" to="/products">
               前台產品列表
             </RouterLink>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" @click="isOpen = !isOpen">
             <RouterLink class="nav-link" to="/cart">購物車</RouterLink>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" @click="isOpen = !isOpen">
             <RouterLink class="nav-link" to="/admin">前往後臺</RouterLink>
           </li>
         </ul>
@@ -38,7 +31,16 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 export default {
-  name: 'AppNavbar'
+  name: 'AppNavbar',
+  setup() {
+    const isOpen = ref(false)
+    const handlerToggle = () => {
+      isOpen.value = !isOpen.value
+    }
+
+    return { isOpen, handlerToggle }
+  }
 }
 </script>
