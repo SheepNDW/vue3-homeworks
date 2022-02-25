@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-const path = 'sheep-api'
+const path = `${process.env.VUE_APP_PATH}`
 
 // 前台 API
 /**
