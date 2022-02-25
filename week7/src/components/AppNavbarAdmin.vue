@@ -1,41 +1,42 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-    <div class="container">
-      <RouterLink class="navbar-brand" to="/admin">後台管理頁</RouterLink>
-      <button class="navbar-toggler" type="button">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-center">
-        <div class="navbar-nav">
-          <RouterLink class="nav-link" to="/">回到前台</RouterLink>
-          <RouterLink class="nav-link" to="/admin/products"
-            >產品列表</RouterLink
+  <nav
+    class="navbar navbar-dark navbar-expand-lg p-3 d-flex flex-lg-column align-items-start"
+  >
+    <RouterLink to="/admin" target="_blank" class="navbar-brand fs-6 fw-light"
+      >BookStore</RouterLink
+    >
+    <button
+      class="navbar-toggler"
+      data-bs-toggle="collapse"
+      data-bs-target="#nav-collapse"
+    >
+      <i class="navbar-toggler-icon"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="nav-collapse">
+      <ul class="navbar-nav d-flex flex-column mt-lg-4">
+        <li class="nav-item">
+          <RouterLink class="nav-link px-0" to="/admin/products"
+            >產品管理</RouterLink
           >
-          <RouterLink class="nav-link" to="/admin/orders">訂單管理</RouterLink>
-        </div>
-      </div>
-      <div class="navbar-nav">
-        <button class="btn btn-success" type="button" @click="logout">
-          登出
-        </button>
-      </div>
+        </li>
+        <li class="nav-item">
+          <RouterLink class="nav-link px-0" to="/">優惠券管理</RouterLink>
+        </li>
+        <li class="nav-item">
+          <RouterLink class="nav-link px-0" to="/admin/orders"
+            >訂單管理</RouterLink
+          >
+        </li>
+        <li class="nav-item">
+          <RouterLink class="nav-link px-0" to="/">文章管理</RouterLink>
+        </li>
+      </ul>
     </div>
   </nav>
 </template>
 
 <script>
-import { useRouter } from 'vue-router'
 export default {
-  name: 'NavbarAdmin',
-  setup() {
-    const router = useRouter()
-    const logout = () => {
-      // 清除token 跳回首頁
-      document.cookie = 'hexToken=;expires=;'
-      router.push('/')
-    }
-
-    return { logout }
-  }
+  name: 'NavbarAdmin'
 }
 </script>

@@ -212,6 +212,7 @@ import { onMounted, ref, watch } from 'vue'
 import Modal from 'bootstrap/js/dist/modal'
 import { editProduct, uploadProduct } from '@/api/product'
 export default {
+  name: 'ProductModal',
   props: {
     tempProduct: {
       type: Object,
@@ -222,6 +223,7 @@ export default {
       default: false
     }
   },
+  emits: ['update-list'],
   setup(props, { emit }) {
     const productModal = ref(null)
     let bsModal = null

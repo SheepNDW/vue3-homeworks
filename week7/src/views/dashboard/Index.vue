@@ -1,7 +1,11 @@
 <template>
-  <NavbarAdmin />
-  <div class="container mt-2">
-    <router-view v-if="checkSuccess" />
+  <div class="admin container-fluid row g-0 min-vh-100 bg-dark">
+    <div class="col-lg-2 text-light">
+      <NavbarAdmin />
+    </div>
+    <div class="col-lg-10 bg-light min-vh-100 shadow-md">
+      <RouterView v-if="checkSuccess"></RouterView>
+    </div>
   </div>
 </template>
 
