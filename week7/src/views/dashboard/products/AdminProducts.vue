@@ -39,7 +39,7 @@
             :key="product.id"
           >
             <div class="col-2 d-none d-md-block">
-              <span class="badge bg-info fw-bold">
+              <span class="badge bg-secondary fw-light category-badge">
                 {{ product.category }}
               </span>
             </div>
@@ -144,6 +144,11 @@ export default {
 <style lang="scss" scoped>
 .filter-form {
   max-width: 200px;
+}
+
+// 分類標籤
+.category-badge {
+  font-size: 0.875rem;
 }
 
 // 列表標題欄
