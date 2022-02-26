@@ -19,7 +19,7 @@
             @click="openModal('new')"
           >
             <i class="material-icons me-2">add_circle_outline</i>
-            <div class="d-none d-md-block">新增產品</div>
+            新增產品
           </button>
         </div>
         <ul
@@ -29,7 +29,7 @@
           <li class="col-3 text-start">商品名稱</li>
           <li class="col-2">原價</li>
           <li class="col-2">售價</li>
-          <li class="col-1">啟用</li>
+          <li class="col-1">狀態</li>
           <li class="col-3 col-md-2">操作</li>
         </ul>
         <ul class="list-group list-group-flush shadow-sm mb-4" v-if="products">
