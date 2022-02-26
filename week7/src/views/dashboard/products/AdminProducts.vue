@@ -14,12 +14,12 @@
           </select>
 
           <button
-            class="btn btn-primary ms-auto"
+            class="btn btn-primary ms-auto d-flex"
             type="button"
             @click="openModal('new')"
           >
-            <i class="fas fa-plus-circle"></i>
-            新增產品
+            <i class="material-icons me-2">add_circle_outline</i>
+            <div class="d-none d-md-block">新增產品</div>
           </button>
         </div>
         <ul
@@ -47,10 +47,10 @@
             <div class="col-2">{{ product.origin_price }}</div>
             <div class="col-2">{{ product.price }}</div>
             <div class="col-1 text-success" v-if="product.is_enabled">
-              <i class="fas fa-check-circle"></i>
+              <i class="material-icons">check_circle</i>
             </div>
             <div class="col-1 text-danger" v-else>
-              <i class="fas fa-times-circle"></i>
+              <i class="material-icons">cancel</i>
             </div>
             <div class="col-3 col-md-2 d-flex justify-content-center">
               <button
