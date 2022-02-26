@@ -1,6 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 
+// 匯入Bootstrap
+import 'bootstrap'
+
 // 匯入 vee-validate 主套件
 import { defineRule, configure } from 'vee-validate'
 // 匯入 vee-validate 相關規則
