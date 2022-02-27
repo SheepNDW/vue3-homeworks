@@ -5,11 +5,13 @@
     id="productModal"
     data-bs-backdrop="static"
     data-bs-keyboard="false"
+    @submit.prevent="updateProduct"
   >
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content border-0">
         <div class="modal-header bg-dark p-3 text-light">
-          新增產品
+          <span v-if="isEdit">編輯產品</span>
+          <span v-else>新增產品</span>
           <button
             type="button"
             class="btn-close me-1"
@@ -59,7 +61,7 @@
           <!-- tabs內容區域 -->
           <div class="tab-content" id="tabContent">
             <!-- 產品資訊 -->
-            <div class="tab-pane fade show" id="info" role="tabpanel">
+            <div class="tab-pane fade show active" id="info" role="tabpanel">
               <div class="row g-2">
                 <div class="col-8">
                   <label class="form-label" for="product-title">
@@ -71,6 +73,7 @@
                     class="form-control"
                     placeholder="輸入商品名稱"
                     required
+                    v-model="product.title"
                   />
                 </div>
                 <div class="col-4">
@@ -81,10 +84,11 @@
                     id="product-category"
                     class="form-control form-select"
                     required
+                    v-model="product.category"
                   >
                     <option value="" selected disabled>選擇類別</option>
-                    <option v-for="i in 4" :key="i" :value="i">
-                      {{ i }}
+                    <option v-for="item in category" :key="item" :value="item">
+                      {{ item }}
                     </option>
                   </select>
                 </div>
@@ -99,6 +103,7 @@
                     class="form-control"
                     placeholder="輸入原價"
                     required
+                    v-model="product.origin_price"
                   />
                 </div>
                 <div class="col-4 mt-2">
@@ -112,40 +117,51 @@
                     class="form-control"
                     placeholder="輸入售價"
                     required
+                    v-model="product.price"
                   />
                 </div>
                 <div class="col-4 mt-2">
                   <label class="form-label" for="product-unit">
                     單位<small class="text-danger ms-1">*</small>
                   </label>
-                  <select
+                  <input
                     id="product-unit"
-                    class="form-control form-select"
+                    class="form-control"
                     required
-                  >
-                    <option value="" selected disabled>選擇單位</option>
-                    <option v-for="i in 4" :key="i" :value="i">
-                      {{ i }}
-                    </option>
-                  </select>
+                    v-model="product.unit"
+                  />
                 </div>
                 <hr class="mt-4" />
                 <div class="col-4 d-flex align-items-center">
                   <label class="form-label m-0" for="product-active"
-                    >上架商品</label
+                    >是否上架</label
                   >
-                  <div class="switch-group ms-2">
-                    <input type="checkbox" id="product-active" role="button" />
-                    <div class="ico_switch"></div>
+                  <div class="form-check ms-2">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="product-active"
+                      role="button"
+                      :true-value="1"
+                      :false-value="0"
+                      v-model.number="product.is_enabled"
+                    />
                   </div>
                 </div>
                 <div class="col-4 d-flex align-items-center">
-                  <label class="form-label m-0" for="product-promote"
+                  <label class="form-label m-0" for="product-hot"
                     >人氣推薦</label
                   >
-                  <div class="switch-group ms-2">
-                    <input type="checkbox" id="product-promote" role="button" />
-                    <div class="ico_switch"></div>
+                  <div class="form-check ms-2">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="product-hot"
+                      role="button"
+                      :true-value="1"
+                      :false-value="0"
+                      v-model.number="product.is_hot"
+                    />
                   </div>
                 </div>
               </div>
@@ -155,11 +171,13 @@
               <div class="row g-0">
                 <div class="col-12">
                   <label class="form-label" for="product-desc">產品描述</label>
-                  <input
-                    type="text"
+                  <textarea
                     class="form-control"
                     id="product-desc"
+                    style="min-height: 120px"
                     placeholder="輸入產品內容"
+                    row="5"
+                    v-model="product.description"
                   />
                 </div>
                 <div class="col-12 mt-2">
@@ -172,48 +190,91 @@
                     style="min-height: 120px"
                     placeholder="輸入產品內容"
                     row="5"
+                    v-model="product.content"
                   />
                 </div>
               </div>
             </div>
             <!-- 產品圖片 -->
-            <div class="tab-pane fade show active" id="picture" role="tabpanel">
-              <div class="row">
+            <div class="tab-pane fade show" id="picture" role="tabpanel">
+              <div class="row overflow-auto" style="max-height: 600px">
                 <!-- 主圖 -->
                 <div class="col-12 mt-2">
                   <h3 class="mb-3">
                     新增主圖<small class="text-danger ms-1">*</small>
                   </h3>
-                  <div>
-                    <div class="mb-1">
-                      <div class="mb-3">
-                        <input
-                          type="text"
-                          class="form-control"
-                          placeholder="請輸入圖片連結"
-                        />
-                      </div>
-                      <img class="img-fluid" src="" alt="" />
+                  <div class="mb-1">
+                    <div class="mb-3">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="請輸入圖片連結"
+                        v-model="product.imageUrl"
+                      />
                     </div>
+                    <figure class="figure-fluid bg-light text-center">
+                      <img
+                        :src="product.imageUrl"
+                        class="figure-img img-fluid rounded picture"
+                      />
+                    </figure>
                   </div>
                 </div>
                 <!-- 其他附圖 -->
                 <div class="col-12 mt-2">
                   <h3 class="mb-3">其他圖片</h3>
-                  <div>
-                    <div class="mb-1">
-                      <div class="mb-3">
-                        <label for="imageUrl" class="form-label"
-                          >輸入圖片網址</label
-                        >
+                  <!-- 檢查是否存在imagesUrl屬性且為陣列 -->
+                  <div v-if="Array.isArray(product.imagesUrl)">
+                    <div class="col-12 d-flex">
+                      <div
+                        class="img-box"
+                        v-for="(img, i) in product.imagesUrl"
+                        :key="i"
+                      >
                         <input
                           type="text"
                           class="form-control"
                           placeholder="請輸入圖片連結"
+                          v-model="product.imagesUrl[i]"
+                        />
+                        <img
+                          class="img-fluid img-thumbnail"
+                          :src="img"
+                          alt=""
                         />
                       </div>
-                      <img class="img-fluid" src="" alt="" />
+                      <!-- 如果當前沒有多圖或是在最後一張圖後面加上新增按鈕 -->
+                      <div
+                        v-if="
+                          !product.imagesUrl.length ||
+                          product.imagesUrl[product.imagesUrl.length - 1]
+                        "
+                      >
+                        <button
+                          class="btn btn-outline-secondary btn-sm d-flex align-items-center"
+                          @click="product.imagesUrl.push('')"
+                        >
+                          <i class="material-icons">add_photo_alternate</i>
+                        </button>
+                      </div>
+                      <div v-else>
+                        <button
+                          class="btn btn-outline-danger btn-sm d-flex align-items-center"
+                          @click="product.imagesUrl.pop()"
+                        >
+                          <i class="material-icons">delete_outline</i>
+                        </button>
+                      </div>
                     </div>
+                  </div>
+                  <!-- 當前沒有imagesUrl -->
+                  <div v-else>
+                    <button
+                      class="btn btn-outline-primary btn-sm d-flex align-items-center"
+                      @click="addImg"
+                    >
+                      <i class="material-icons">add_photo_alternate</i>
+                    </button>
                   </div>
                 </div>
                 <div class="col-12 mt-3">
@@ -255,8 +316,8 @@
 <script>
 import { onMounted, ref, watch } from 'vue'
 import Modal from 'bootstrap/js/dist/modal'
-import 'bootstrap/dist/js/bootstrap.bundle'
 import { editProduct, uploadProduct } from '@/api/product'
+import { productCategory } from '@/api/constants'
 export default {
   name: 'ProductModal',
   props: {
@@ -320,6 +381,7 @@ export default {
     }
 
     return {
+      category: productCategory,
       productModal,
       addImg,
       closeModal,
@@ -330,3 +392,20 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.picture {
+  object-fit: contain;
+  max-width: 100%;
+  height: 100%;
+  min-height: 9.5rem;
+  max-height: 20rem;
+  margin-bottom: 0;
+}
+
+.img-box {
+  width: calc((100% - 1rem) / 3);
+  min-height: 1rem;
+  margin-right: 0.5rem;
+}
+</style>
