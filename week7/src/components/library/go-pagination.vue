@@ -20,7 +20,7 @@
         <a
           class="page-link"
           href="javascript:;"
-          @click="$emit('change-page', page)"
+          @click.prevent="$emit('change-page', page)"
           >{{ page }}</a
         >
       </li>

@@ -2,8 +2,8 @@
   <nav
     class="navbar navbar-dark navbar-expand-lg p-3 d-flex flex-lg-column align-items-start"
   >
-    <RouterLink to="/admin" target="_blank" class="navbar-brand fs-6 fw-light"
-      >BookStore</RouterLink
+    <RouterLink to="/" target="_blank" class="navbar-brand fs-6 fw-light"
+      >GO Shop</RouterLink
     >
     <button
       class="navbar-toggler"
@@ -15,20 +15,28 @@
     <div class="collapse navbar-collapse" id="nav-collapse">
       <ul class="navbar-nav d-flex flex-column mt-lg-4">
         <li class="nav-item">
-          <RouterLink class="nav-link px-0" to="/admin/products"
-            >產品管理</RouterLink
-          >
+          <RouterLink class="nav-link px-0 d-flex" to="/admin/products">
+            <i class="material-icons me-1">grid_view</i>
+            產品管理
+          </RouterLink>
         </li>
         <li class="nav-item">
-          <RouterLink class="nav-link px-0" to="/">優惠券管理</RouterLink>
+          <RouterLink class="nav-link px-0 d-flex" to="/">
+            <i class="material-icons me-1">local_atm</i>
+            優惠券管理(施工中)
+          </RouterLink>
         </li>
         <li class="nav-item">
-          <RouterLink class="nav-link px-0" to="/admin/orders"
-            >訂單管理</RouterLink
-          >
+          <RouterLink class="nav-link px-0 d-flex" to="/admin/orders">
+            <i class="material-icons me-1">shopping_cart_checkout</i>
+            訂單管理
+          </RouterLink>
         </li>
         <li class="nav-item">
-          <RouterLink class="nav-link px-0" to="/">文章管理</RouterLink>
+          <RouterLink class="nav-link px-0 d-flex" to="/">
+            <i class="material-icons me-1">article</i>
+            文章管理(施工中)
+          </RouterLink>
         </li>
       </ul>
     </div>
