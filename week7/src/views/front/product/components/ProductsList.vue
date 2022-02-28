@@ -57,7 +57,7 @@
       </tr>
     </tbody>
   </table>
-  <UiPagination
+  <GoPagination
     v-if="pagination?.total_pages > 1"
     :pages="pagination"
     @change-page="changePager"
