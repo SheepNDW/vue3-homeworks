@@ -270,7 +270,7 @@
                   <!-- 當前沒有imagesUrl -->
                   <div v-else>
                     <button
-                      class="btn btn-outline-primary btn-sm d-flex align-items-center"
+                      class="btn btn-outline-secondary btn-sm d-flex align-items-center"
                       @click="addImg"
                     >
                       <i class="material-icons">add_photo_alternate</i>
@@ -287,8 +287,12 @@
                       name="file-to-upload"
                       class="form-control"
                       id="product-upload-file"
-                      ref="upload-file"
-                    /><button class="btn btn-outline-secondary">
+                      ref="uploadInputRef"
+                      @change="getUploadFile"
+                    /><button
+                      class="btn btn-outline-secondary"
+                      @click.prevent="uploadImage"
+                    >
                       上傳圖片
                     </button>
                   </div>
@@ -318,6 +322,8 @@ import { onMounted, ref, watch } from 'vue'
 import Modal from 'bootstrap/js/dist/modal'
 import { editProduct, uploadProduct } from '@/api/product'
 import { productCategory } from '@/api/constants'
+import Message from '@/components/library/Message'
+import { useUpload } from '@/hooks'
 export default {
   name: 'ProductModal',
   props: {
@@ -351,14 +357,13 @@ export default {
     watch(
       () => props.tempProduct,
       () => {
-        product.value = { ...props.tempProduct }
+        product.value = JSON.parse(JSON.stringify(props.tempProduct))
       },
       { immediate: true }
     )
 
     // 新增圖片
     const addImg = () => {
-      console.log('add')
       product.value.imagesUrl = []
       product.value.imagesUrl.push('')
     }
@@ -368,16 +373,30 @@ export default {
       // 修改
       if (props.isEdit) {
         const data = await editProduct(product.value.id, product.value)
-        alert(data.message)
+        Message({ type: 'success', text: data.message })
       }
       // 新增
       if (!props.isEdit) {
         const data = await uploadProduct(product.value)
-        alert(data.message)
+        Message({ type: 'success', text: data.message })
       }
       closeModal()
       // 通知父元件更新產品列表
       emit('update-list')
+    }
+
+    // 上傳圖片邏輯
+    const { uploadInputRef, file, getUploadFile, upload } = useUpload()
+    const uploadImage = async () => {
+      const imgUrl = await upload()
+      if (imgUrl) {
+        if (product.value.imagesUrl) {
+          product.value.imagesUrl.push(imgUrl)
+        } else {
+          product.value.imagesUrl = []
+          product.value.imagesUrl.push(imgUrl)
+        }
+      }
     }
 
     return {
@@ -387,7 +406,11 @@ export default {
       closeModal,
       openModal,
       updateProduct,
-      product
+      product,
+      uploadInputRef,
+      file,
+      getUploadFile,
+      uploadImage
     }
   }
 }
