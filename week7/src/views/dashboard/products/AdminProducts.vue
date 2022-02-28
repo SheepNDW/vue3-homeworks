@@ -71,7 +71,7 @@
           </li>
         </ul>
         <!-- 分頁元件 -->
-        <UiPagination
+        <GoPagination
           v-if="pagination?.total_pages > 1"
           :pages="pagination"
           @change-page="changePager"

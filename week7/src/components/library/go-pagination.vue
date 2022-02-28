@@ -40,7 +40,7 @@
 
 <script>
 export default {
-  name: 'UiPagination',
+  name: 'GoPagination',
   props: {
     pages: {
       type: Object,
