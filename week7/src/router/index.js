@@ -11,6 +11,8 @@ const Login = () => import('@/views/front/login/Index')
 const Dashboard = () => import('@/views/dashboard/Index')
 const AdminProducts = () => import('@/views/dashboard/products/AdminProducts')
 const AdminOrders = () => import('@/views/dashboard/orders/AdminOrders')
+const AdminCoupon = () => import('@/views/dashboard/coupon/AdminCoupon')
+const AdminArticle = () => import('@/views/dashboard/article/AdminArticle')
 
 const routes = [
   {
@@ -35,7 +37,9 @@ const routes = [
     redirect: '/admin/products',
     children: [
       { path: 'products', component: AdminProducts },
-      { path: 'orders', component: AdminOrders }
+      { path: 'orders', component: AdminOrders },
+      { path: 'coupon', component: AdminCoupon },
+      { path: 'article', component: AdminArticle }
     ]
   }
 ]
