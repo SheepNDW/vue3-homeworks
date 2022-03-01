@@ -2,16 +2,25 @@
   <!-- 頭部區域 -->
   <HeaderAdmin subTitle="訂單管理" />
   <!-- 卡片視圖 -->
-  <div class="flex-fill overflow-auto p-3">
-    <div class="card p-2 shadow-sm">
+  <div class="flex-fill overflow-auto p-3" style="position: relative">
+    <!-- Loading 元件 -->
+    <Loading :active="isLoading" :is-full-page="false" />
+    <div class="card p-2 shadow-sm" style="min-height: 200px">
       <div class="card-body">
+        <div class="d-flex justify-content-end align-items-center mb-3">
+          <button class="btn btn-danger d-flex" type="button">
+            <i class="material-icons me-1">delete</i>
+            刪除全部訂單
+          </button>
+        </div>
         <table class="table align-middle">
-          <thead>
+          <thead class="table-light">
             <tr>
               <th scope="col">建立時間</th>
-              <th scope="col">訂單編號</th>
+              <th scope="col">購買款項</th>
               <th scope="col">金額</th>
-              <th scope="col">查看詳情</th>
+              <th scope="col">狀態</th>
+              <th scope="col">操作</th>
             </tr>
           </thead>
           <tbody>
@@ -19,10 +28,32 @@
               <th scope="row">
                 {{ dayjs.unix(order.create_at).format('YYYY-MM-DD HH:mm:ss') }}
               </th>
-              <td>{{ order.id }}</td>
+              <td>
+                <ul class="list-unstyled">
+                  <li v-for="(product, i) in order.products" :key="i">
+                    {{ product.product.title }} 數量：{{ product.qty }}
+                    {{ product.product.unit }}
+                  </li>
+                </ul>
+              </td>
               <td>NT${{ order.total }}</td>
               <td>
-                <button type="button" class="btn btn-primary">查看</button>
+                <span v-if="order.is_paid" class="text-success">已付款</span>
+                <span v-else class="text-danger">未付款</span>
+              </td>
+              <td>
+                <div class="btn-group" role="group">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm"
+                    @click="open(order)"
+                  >
+                    查看
+                  </button>
+                  <button type="button" class="btn btn-outline-danger btn-sm">
+                    刪除
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -35,23 +66,30 @@
       </div>
     </div>
   </div>
+  <OrderModal ref="orderModalCom" />
 </template>
 
 <script>
 import HeaderAdmin from '@/components/AppHeaderAdmin.vue'
+import OrderModal from './components/OrderModal.vue'
 import { getOrdersList } from '@/api/order'
-import { ref } from 'vue'
+import { provide, ref } from 'vue'
 import dayjs from 'dayjs'
 export default {
   name: 'AdminOrders',
-  components: { HeaderAdmin },
+  components: { HeaderAdmin, OrderModal },
   setup() {
+    const isLoading = ref(true)
+    const orderModalCom = ref(null)
+
     // 取得後台訂單列表
     const orders = ref(null)
     const pagination = ref(null)
     getOrdersList().then((data) => {
+      isLoading.value = true
       orders.value = data.orders
       pagination.value = data.pagination
+      isLoading.value = false
     })
 
     const changePager = async (page) => {
@@ -60,7 +98,24 @@ export default {
       pagination.value = data.pagination
     }
 
-    return { orders, dayjs, pagination, changePager }
+    // 查看訂單細節 (使用 provide 傳入讓所有後代元件可以共享)
+    const tempOrder = ref({})
+    provide('tempOrder', tempOrder)
+    const open = (order) => {
+      tempOrder.value = order
+      orderModalCom.value.openModal()
+    }
+
+    return {
+      orderModalCom,
+      isLoading,
+      orders,
+      dayjs,
+      pagination,
+      changePager,
+      open,
+      tempOrder
+    }
   }
 }
 </script>
