@@ -318,12 +318,11 @@
 </template>
 
 <script>
-import { onMounted, ref, watch } from 'vue'
-import Modal from 'bootstrap/js/dist/modal'
+import { ref, watch } from 'vue'
 import { editProduct, uploadProduct } from '@/api/product'
 import { productCategory } from '@/api/constants'
 import Message from '@/components/library/Message'
-import { useUpload } from '@/hooks'
+import { useBsModal, useUpload } from '@/hooks'
 export default {
   name: 'ProductModal',
   props: {
@@ -339,18 +338,7 @@ export default {
   emits: ['update-list'],
   setup(props, { emit }) {
     const productModal = ref(null)
-    let bsModal = null
-    onMounted(() => {
-      bsModal = new Modal(productModal.value)
-    })
-
-    const openModal = () => {
-      bsModal.show()
-    }
-
-    const closeModal = () => {
-      bsModal.hide()
-    }
+    const { openModal, closeModal } = useBsModal(productModal)
 
     // 將props傳入的物件先進行拷貝再進行修改
     const product = ref(props.tempProduct)
@@ -401,12 +389,12 @@ export default {
 
     return {
       category: productCategory,
+      product,
       productModal,
-      addImg,
       closeModal,
       openModal,
+      addImg,
       updateProduct,
-      product,
       uploadInputRef,
       file,
       getUploadFile,
