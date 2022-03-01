@@ -1,7 +1,9 @@
+import { ref, onMounted } from 'vue'
 import { uploadImage } from '@/api/upload'
+import Modal from 'bootstrap/js/dist/modal'
 import Message from '@/components/library/Message'
-import { ref } from 'vue'
 
+// 上傳圖片 hook
 export const useUpload = () => {
   const uploadInputRef = ref(null)
   const file = ref(null)
@@ -30,5 +32,24 @@ export const useUpload = () => {
     file,
     getUploadFile,
     upload
+  }
+}
+
+// bsModal hook
+export const useBsModal = (RefImpl) => {
+  let bsModal = null
+  onMounted(() => {
+    bsModal = new Modal(RefImpl.value)
+  })
+  const openModal = () => {
+    bsModal.show()
+  }
+  const closeModal = () => {
+    bsModal.hide()
+  }
+
+  return {
+    openModal,
+    closeModal
   }
 }
