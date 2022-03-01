@@ -63,7 +63,7 @@
               <button
                 class="btn btn-sm btn-outline-danger fs-7 ms-2 ms-md-3"
                 type="button"
-                @click="openModal()"
+                @click="removeProduct(product.id)"
               >
                 刪除
               </button>
@@ -89,10 +89,12 @@
 </template>
 
 <script>
-import HeaderAdmin from '@/components/AppHeaderAdmin.vue'
-import ProductModal from './components/ProductModal.vue'
-import { getAdminProducts } from '@/api/product'
 import { ref } from 'vue'
+import { deleteProduct, getAdminProducts } from '@/api/product'
+import ProductModal from './components/ProductModal.vue'
+import HeaderAdmin from '@/components/AppHeaderAdmin.vue'
+import Confirm from '@/components/library/Confirm'
+import Message from '@/components/library/Message'
 export default {
   name: 'AdminProducts',
   components: { HeaderAdmin, ProductModal },
@@ -127,6 +129,18 @@ export default {
       productModalCom.value.openModal()
     }
 
+    // 刪除產品方法
+    const removeProduct = (id) => {
+      Confirm({ text: '你確認要刪除此產品嗎' })
+        .then(() => {
+          deleteProduct(id).then((data) => {
+            Message({ type: 'success', text: data.message })
+            getProducts()
+          })
+        })
+        .catch((e) => {})
+    }
+
     return {
       products,
       pagination,
@@ -135,7 +149,8 @@ export default {
       isEdit,
       openModal,
       productModalCom,
-      getProducts
+      getProducts,
+      removeProduct
     }
   }
 }
