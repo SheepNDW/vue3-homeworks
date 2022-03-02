@@ -20,3 +20,12 @@ export const createOrder = (order) => {
 export const getOrdersList = (page = 1) => {
   return request(`/api/${path}/admin/orders?page=${page}`, 'get')
 }
+
+/**
+ * 修改訂單資訊 (付費狀態、訂購人資訊)
+ * @param {Object} order - tempOrder
+ * @returns Promise
+ */
+export const updateOrder = (order) => {
+  return request(`/api/${path}/admin/order/${order.id}`, 'put', { data: order })
+}

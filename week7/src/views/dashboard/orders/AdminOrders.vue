@@ -66,7 +66,7 @@
       </div>
     </div>
   </div>
-  <OrderModal ref="orderModalCom" />
+  <OrderModal ref="orderModalCom" @update-list="updateOrderList" />
 </template>
 
 <script>
@@ -85,18 +85,18 @@ export default {
     // 取得後台訂單列表
     const orders = ref(null)
     const pagination = ref(null)
-    getOrdersList().then((data) => {
+    const getOrders = async (page) => {
       isLoading.value = true
-      orders.value = data.orders
-      pagination.value = data.pagination
-      isLoading.value = false
-    })
-
-    const changePager = async (page) => {
       const data = await getOrdersList(page)
       orders.value = data.orders
       pagination.value = data.pagination
+      isLoading.value = false
     }
+    getOrders()
+
+    // 修改完畢後重新取得訂單列表, 換頁函式
+    const updateOrderList = () => getOrders()
+    const changePager = (page) => getOrders(page)
 
     // 查看訂單細節 (使用 provide 傳入讓所有後代元件可以共享)
     const tempOrder = ref({})
@@ -122,10 +122,11 @@ export default {
     return {
       orderModalCom,
       isLoading,
+      updateOrderList,
+      changePager,
       orders,
       dayjs,
       pagination,
-      changePager,
       open,
       tempOrder
     }
