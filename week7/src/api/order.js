@@ -29,3 +29,20 @@ export const getOrdersList = (page = 1) => {
 export const updateOrder = (order) => {
   return request(`/api/${path}/admin/order/${order.id}`, 'put', { data: order })
 }
+
+/**
+ * 刪除一筆訂單
+ * @param {String} id - 訂單ID
+ * @returns Promise
+ */
+export const deleteOrder = (id) => {
+  return request(`/api/${path}/admin/order/${id}`, 'delete')
+}
+
+/**
+ * 刪除所有訂單
+ * @returns Promise
+ */
+export const clearOrder = () => {
+  return request(`/api/${path}/admin/orders/all`, 'delete')
+}

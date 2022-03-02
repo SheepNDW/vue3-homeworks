@@ -8,7 +8,11 @@
     <div class="card p-2 shadow-sm" style="min-height: 200px">
       <div class="card-body">
         <div class="d-flex justify-content-end align-items-center mb-3">
-          <button class="btn btn-danger d-flex" type="button">
+          <button
+            class="btn btn-danger d-flex"
+            type="button"
+            @click="removeAllOrders"
+          >
             <i class="material-icons me-1">delete</i>
             刪除全部訂單
           </button>
@@ -50,7 +54,11 @@
                   >
                     查看
                   </button>
-                  <button type="button" class="btn btn-outline-danger btn-sm">
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger btn-sm"
+                    @click="removeOrder(order.id)"
+                  >
                     刪除
                   </button>
                 </div>
@@ -72,9 +80,11 @@
 <script>
 import HeaderAdmin from '@/components/AppHeaderAdmin.vue'
 import OrderModal from './components/OrderModal.vue'
-import { getOrdersList } from '@/api/order'
+import { clearOrder, deleteOrder, getOrdersList } from '@/api/order'
 import { provide, readonly, ref } from 'vue'
 import dayjs from 'dayjs'
+import Confirm from '@/components/library/Confirm'
+import Message from '@/components/library/Message'
 export default {
   name: 'AdminOrders',
   components: { HeaderAdmin, OrderModal },
@@ -119,6 +129,29 @@ export default {
     provide('updateTempUser', { updateTempUser })
     provide('updateMessage', { updateMessage })
 
+    // --- 刪除功能 ---
+    const removeOrder = (id) => {
+      Confirm({ title: '刪除訂單', text: '確定要刪除該筆訂單嗎' })
+        .then(() => {
+          deleteOrder(id).then(() => {
+            Message({ type: 'success', text: '已永久刪除該筆訂單' })
+            getOrders()
+          })
+        })
+        .catch((e) => {})
+    }
+
+    const removeAllOrders = () => {
+      Confirm({ title: '清空訂單列表', text: '確定要刪除所有訂單嗎' })
+        .then(() => {
+          clearOrder().then(() => {
+            Message({ type: 'success', text: '已永久刪除所有訂單' })
+            getOrders()
+          })
+        })
+        .catch((e) => {})
+    }
+
     return {
       orderModalCom,
       isLoading,
@@ -128,7 +161,9 @@ export default {
       dayjs,
       pagination,
       open,
-      tempOrder
+      tempOrder,
+      removeOrder,
+      removeAllOrders
     }
   }
 }
