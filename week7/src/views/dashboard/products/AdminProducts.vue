@@ -175,6 +175,7 @@ export default {
 // 列表標題欄
 .products-list {
   text-align: center;
+  background: #e9ecef;
 }
 
 // 產品列表
