@@ -23,7 +23,7 @@
         <li class="nav-item">
           <RouterLink class="nav-link px-0 d-flex" to="/admin/coupon">
             <i class="material-icons me-1">local_atm</i>
-            優惠券管理(施工中)
+            優惠券管理
           </RouterLink>
         </li>
         <li class="nav-item">
@@ -35,7 +35,7 @@
         <li class="nav-item">
           <RouterLink class="nav-link px-0 d-flex" to="/admin/article">
             <i class="material-icons me-1">article</i>
-            文章管理(施工中)
+            文章管理 (施工中)
           </RouterLink>
         </li>
       </ul>
