@@ -8,10 +8,14 @@
     <div class="card p-2 shadow-sm" style="min-height: 200px">
       <div class="card-body">
         <div class="d-flex justify-content-between mb-3">
-          <select class="form-select filter-form">
-            <option value="all" selected>全部商品</option>
-            <option v-for="i in 4" :key="i" :value="i">
-              {{ i }}
+          <select
+            class="form-select filter-form"
+            v-model="filter"
+            @change="getFilterProducts"
+          >
+            <option value="" selected>全部</option>
+            <option v-for="cate in category" :key="cate" :value="cate">
+              {{ cate }}
             </option>
           </select>
 
@@ -97,17 +101,19 @@ import ProductModal from './components/ProductModal.vue'
 import HeaderAdmin from '@/components/AppHeaderAdmin.vue'
 import Confirm from '@/components/library/Confirm'
 import Message from '@/components/library/Message'
+import { productCategory } from '@/api/constants'
 export default {
   name: 'AdminProducts',
   components: { HeaderAdmin, ProductModal },
   setup() {
     const isLoading = ref(true)
+    const filter = ref('')
     // 取得後台產品列表
     const products = ref(null)
     const pagination = ref(null)
     const getProducts = async (page) => {
       isLoading.value = true
-      const data = await getAdminProducts(page)
+      const data = await getAdminProducts(page, filter.value)
       products.value = data.products
       pagination.value = data.pagination
       isLoading.value = false
@@ -115,9 +121,10 @@ export default {
     getProducts()
 
     // 換頁函式
-    const changePager = async (page) => {
-      getProducts(page)
-    }
+    const changePager = (page) => getProducts(page)
+
+    // 切換顯示產品類別
+    const getFilterProducts = () => getProducts()
 
     // 想要顯示在modal的產品
     const tempProduct = ref({
@@ -147,6 +154,9 @@ export default {
     }
 
     return {
+      category: productCategory,
+      filter,
+      getFilterProducts,
       isLoading,
       products,
       pagination,

@@ -14,7 +14,7 @@
           <span v-else>新增產品</span>
           <button
             type="button"
-            class="btn-close me-1"
+            class="btn-close btn-close-white me-1"
             data-bs-dismiss="modal"
           ></button>
         </div>
