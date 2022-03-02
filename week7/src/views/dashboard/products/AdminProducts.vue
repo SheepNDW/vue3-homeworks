@@ -2,8 +2,10 @@
   <!-- 頭部區域 -->
   <HeaderAdmin />
   <!-- 卡片視圖 -->
-  <div class="flex-fill overflow-auto p-3">
-    <div class="card p-2 shadow-sm">
+  <div class="flex-fill overflow-auto p-3" style="position: relative">
+    <!-- Loading 元件 -->
+    <Loading :active="isLoading" :is-full-page="false" />
+    <div class="card p-2 shadow-sm" style="min-height: 200px">
       <div class="card-body">
         <div class="d-flex justify-content-between mb-3">
           <select class="form-select filter-form">
@@ -99,13 +101,16 @@ export default {
   name: 'AdminProducts',
   components: { HeaderAdmin, ProductModal },
   setup() {
+    const isLoading = ref(true)
     // 取得後台產品列表
     const products = ref(null)
     const pagination = ref(null)
     const getProducts = async (page) => {
+      isLoading.value = true
       const data = await getAdminProducts(page)
       products.value = data.products
       pagination.value = data.pagination
+      isLoading.value = false
     }
     getProducts()
 
@@ -142,6 +147,7 @@ export default {
     }
 
     return {
+      isLoading,
       products,
       pagination,
       changePager,
