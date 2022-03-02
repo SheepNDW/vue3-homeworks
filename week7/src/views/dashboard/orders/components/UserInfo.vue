@@ -6,7 +6,7 @@
         type="button"
         class="btn btn-sm ms-2"
         :class="isEditInfo ? 'btn-danger' : 'btn-primary'"
-        @click="isEditInfo = !isEditInfo"
+        @click="edit"
       >
         <span v-if="!isEditInfo">修改</span>
         <span v-else>完成</span>
@@ -25,7 +25,7 @@
           type="email"
           id="email"
           class="form-control form-control-sm"
-          v-model="order.user.email"
+          v-model="user.email"
           :disabled="!isEditInfo"
         />
       </li>
@@ -35,7 +35,7 @@
           type="text"
           id="name"
           class="form-control form-control-sm"
-          v-model="order.user.name"
+          v-model="user.name"
           :disabled="!isEditInfo"
         />
       </li>
@@ -45,7 +45,7 @@
           type="text"
           id="tel"
           class="form-control form-control-sm"
-          v-model="order.user.tel"
+          v-model="user.tel"
           :disabled="!isEditInfo"
         />
       </li>
@@ -55,7 +55,7 @@
           type="text"
           id="address"
           class="form-control form-control-sm"
-          v-model="order.user.address"
+          v-model="user.address"
           :disabled="!isEditInfo"
         />
       </li>
@@ -66,7 +66,7 @@
           class="form-control"
           row="3"
           placeholder="無"
-          v-model="order.message"
+          v-model="message"
           :disabled="!isEditInfo"
         />
       </li>
@@ -75,17 +75,48 @@
 </template>
 
 <script>
-import { inject, ref } from 'vue'
+import { watch, inject, ref } from 'vue'
 import dayjs from 'dayjs'
 export default {
   name: 'UserInfo',
   setup() {
     const isEditInfo = ref(false)
+    const user = ref(null)
+    const message = ref(null)
 
     // 接收外層元件提供的tempOrder
     const order = inject('tempOrder')
+    const { updateTempUser } = inject('updateTempUser')
+    const { updateMessage } = inject('updateMessage')
 
-    return { isEditInfo, order, dayjs }
+    // 將tempOrder給賦值給此元件的 user 和 message 進行資料修改
+    watch(
+      () => order,
+      () => {
+        user.value = { ...order.value.user }
+        message.value = order.value.message ?? ''
+      },
+      { immediate: true, deep: true }
+    )
+
+    // 完成更改時統一將此次的改動更新到 tempOrder
+    const edit = () => {
+      isEditInfo.value = !isEditInfo.value
+      // 如果是完成, 則通知外層元件去修改 tempOrder
+      if (!isEditInfo.value) {
+        updateTempUser(user.value)
+        updateMessage(message.value)
+      }
+    }
+
+    return {
+      isEditInfo,
+      user,
+      message,
+      order,
+      dayjs,
+      edit
+    }
   }
 }
 </script>

@@ -19,13 +19,16 @@
               <span class="text-success" v-if="order.is_paid">已付款</span>
               <span class="text-danger" v-else>未付款</span>
             </div>
-            <router-link
-              type="button"
-              class="btn btn-sm btn-outline-secondary ms-2"
-              target="_blank"
-              to="/"
-              >前往付款</router-link
-            >
+            <div class="form-check ms-2">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="flexCheckDefault"
+                v-model="paidStatus"
+                @change="updatePaid"
+              />
+            </div>
           </div>
           <div class="row g-3 d-md-flex">
             <!-- 訂購人資訊 -->
@@ -46,7 +49,7 @@
 </template>
 
 <script>
-import { inject, ref } from 'vue'
+import { inject, ref, watch } from 'vue'
 import { useBsModal } from '@/hooks'
 import UserInfo from './UserInfo.vue'
 import OrderDetail from './OrderDetail.vue'
@@ -57,14 +60,24 @@ export default {
     const orderModal = ref(null)
     const { openModal, closeModal } = useBsModal(orderModal)
 
-    // 接收外層元件提供的tempOrder
+    // 接收外層元件提供的 tempOrder 並將付款狀態(is_paid)賦值給 paidStatus 去做更改
     const order = inject('tempOrder')
+    const { updatePaid } = inject('updatePaid')
+    const paidStatus = ref(null)
+    watch(
+      () => order,
+      () => {
+        paidStatus.value = order.value.is_paid
+      }
+    )
 
     return {
       orderModal,
       openModal,
       closeModal,
-      order
+      order,
+      paidStatus,
+      updatePaid
     }
   }
 }

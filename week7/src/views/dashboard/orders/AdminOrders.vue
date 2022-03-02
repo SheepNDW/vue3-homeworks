@@ -73,7 +73,7 @@
 import HeaderAdmin from '@/components/AppHeaderAdmin.vue'
 import OrderModal from './components/OrderModal.vue'
 import { getOrdersList } from '@/api/order'
-import { provide, ref } from 'vue'
+import { provide, readonly, ref } from 'vue'
 import dayjs from 'dayjs'
 export default {
   name: 'AdminOrders',
@@ -100,11 +100,24 @@ export default {
 
     // 查看訂單細節 (使用 provide 傳入讓所有後代元件可以共享)
     const tempOrder = ref({})
-    provide('tempOrder', tempOrder)
     const open = (order) => {
       tempOrder.value = order
       orderModalCom.value.openModal()
     }
+    // 修改 tempOrder 資料的相關的函式
+    const updatePaid = () => {
+      tempOrder.value.is_paid = !tempOrder.value.is_paid
+    }
+    const updateTempUser = (userInfo) => {
+      tempOrder.value.user = userInfo
+    }
+    const updateMessage = (msg) => {
+      tempOrder.value.message = msg
+    }
+    provide('tempOrder', readonly(tempOrder))
+    provide('updatePaid', { updatePaid })
+    provide('updateTempUser', { updateTempUser })
+    provide('updateMessage', { updateMessage })
 
     return {
       orderModalCom,
