@@ -54,6 +54,7 @@ import { reactive, ref } from 'vue'
 import { signin } from '@/api/login'
 import { useRouter, useRoute } from 'vue-router'
 import { Form, Field, ErrorMessage } from 'vee-validate'
+import Message from '@/components/library/Message'
 export default {
   name: 'Login',
   components: { Form, Field, ErrorMessage },
@@ -73,11 +74,11 @@ export default {
         try {
           const { token, expired } = await signin(form)
           document.cookie = `hexToken=${token}; expires=${new Date(expired)};`
-          alert('登入成功! ')
+          Message({ type: 'success', text: '登入成功! ' })
           router.push(route.query.redirectUrl || '/admin')
         } catch (err) {
           form.password = ''
-          alert(err.response.data.message + '!')
+          Message({ type: 'success', text: err.response.data.message + '!' })
         }
       }
     }
