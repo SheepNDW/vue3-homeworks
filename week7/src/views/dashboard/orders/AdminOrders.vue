@@ -17,55 +17,57 @@
             刪除全部訂單
           </button>
         </div>
-        <table class="table align-middle">
-          <thead class="table-light">
-            <tr>
-              <th scope="col">建立時間</th>
-              <th scope="col">購買款項</th>
-              <th scope="col">金額</th>
-              <th scope="col">狀態</th>
-              <th scope="col">操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="order in orders" :key="order.id">
-              <th scope="row">
-                {{ dayjs.unix(order.create_at).format('YYYY-MM-DD HH:mm:ss') }}
-              </th>
-              <td>
-                <ul class="list-unstyled">
-                  <li v-for="(product, i) in order.products" :key="i">
-                    {{ product.product.title }} 數量：{{ product.qty }}
-                    {{ product.product.unit }}
-                  </li>
-                </ul>
-              </td>
-              <td>NT${{ order.total }}</td>
-              <td>
-                <span v-if="order.is_paid" class="text-success">已付款</span>
-                <span v-else class="text-danger">未付款</span>
-              </td>
-              <td>
-                <div class="btn-group" role="group">
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary btn-sm"
-                    @click="open(order)"
-                  >
-                    查看
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-outline-danger btn-sm"
-                    @click="removeOrder(order.id)"
-                  >
-                    刪除
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <ul
+          class="row g-0 list-unstyled rounded-0 p-2 order-list text-nowrap border-bottom border-2"
+        >
+          <li class="col-2">建立時間</li>
+          <li class="col-4">購買款項</li>
+          <li class="col-2">金額</li>
+          <li class="col-2">狀態</li>
+          <li class="col-2">操作</li>
+        </ul>
+        <ul class="list-group list-group-flush shadow-sm mb-4">
+          <li
+            class="list-group-item p-2"
+            v-for="order in orders"
+            :key="order.id"
+          >
+            <div class="col-2">
+              {{ dayjs.unix(order.create_at).format('YYYY-MM-DD HH:mm:ss') }}
+            </div>
+            <div class="col-4">
+              <ul class="list-unstyled">
+                <li v-for="(product, i) in order.products" :key="i">
+                  {{ product.product.title }} 數量：{{ product.qty }}
+                  {{ product.product.unit }}
+                </li>
+              </ul>
+            </div>
+            <div class="col-2">NT${{ order.total }}</div>
+            <div class="col-2 text-success" v-if="order.is_paid">
+              <span>已付款</span>
+            </div>
+            <div class="col-2 text-danger" v-else>
+              <span>未付款</span>
+            </div>
+            <div class="col-2 d-flex justify-content-center">
+              <button
+                class="btn btn-sm btn-outline-primary fs-7"
+                type="button"
+                @click="open(order)"
+              >
+                編輯
+              </button>
+              <button
+                class="btn btn-sm btn-outline-danger fs-7 ms-2 ms-md-3"
+                type="button"
+                @click="removeOrder(order.id)"
+              >
+                刪除
+              </button>
+            </div>
+          </li>
+        </ul>
         <GoPagination
           v-if="pagination?.total_pages > 1"
           :pages="pagination"
@@ -168,3 +170,19 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+// 標題欄
+.order-list {
+  text-align: center;
+  background: #e9ecef;
+}
+
+// 文章列表
+.list-group-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+</style>

@@ -20,7 +20,7 @@
         <ul
           class="row g-0 list-unstyled rounded-0 p-2 article-list text-nowrap border-bottom border-2"
         >
-          <li class="col-2 text-start">文章標題</li>
+          <li class="col-2">文章標題</li>
           <li class="col-2">作者</li>
           <li class="col-2">描述</li>
           <li class="col-2">建立時間</li>
@@ -33,7 +33,7 @@
             v-for="item in articleList"
             :key="item.id"
           >
-            <div class="col-2 text-start">{{ item.title }}</div>
+            <div class="col-2">{{ item.title }}</div>
             <div class="col-2">{{ item.author }}</div>
             <div class="col-2">{{ item.description }}</div>
             <div class="col-2">

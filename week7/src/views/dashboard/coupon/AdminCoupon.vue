@@ -20,7 +20,7 @@
         <ul
           class="row g-0 list-unstyled rounded-0 p-2 coupons-list text-nowrap border-bottom border-2"
         >
-          <li class="col-2 text-start">優惠券名稱</li>
+          <li class="col-2">優惠券名稱</li>
           <li class="col-2">優惠碼</li>
           <li class="col-2">折扣</li>
           <li class="col-2">有效期限</li>
@@ -33,7 +33,7 @@
             v-for="item in couponList"
             :key="item.id"
           >
-            <div class="col-2 text-start">{{ item.title }}</div>
+            <div class="col-2">{{ item.title }}</div>
             <div class="col-2">{{ item.code }}</div>
             <div class="col-2">{{ item.percent }}折</div>
             <div class="col-2">

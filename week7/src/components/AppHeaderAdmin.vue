@@ -4,8 +4,12 @@
       <li class="breadcrumb-item">管理系統</li>
       <li class="breadcrumb-item active">{{ subTitle }}</li>
     </ol>
-    <button type="button" class="btn btn-sm btn-secondary" @click="logout">
-      登出
+    <button
+      type="button"
+      class="btn btn-sm btn-secondary d-flex align-items-center"
+      @click="logout"
+    >
+      <i class="material-icons me-1">logout</i>登出
     </button>
   </nav>
 </template>
